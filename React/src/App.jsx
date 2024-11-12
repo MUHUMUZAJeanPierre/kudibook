@@ -1,56 +1,52 @@
-import { useState } from "react";
-import { UserDetail } from "./components/UserDetail";
+import { useEffect, useState } from "react"
 
-export default function App() {
-    const [username, setUsername] =useState("");
-    const [email, setEmail] =useState("");
-    const [counter, setCounter] = useState(4)
+export default function App(){
+    const [counter, setCounter] = useState(0);
+    const [sync, setSync] = useState(false);
+    
+    useEffect(()=>{
+        console.log("rendering...");
+        document.title = "React tutorial" + counter;
+    }, [sync])
 
-    const [users, setUsers] = useState([
-        {
-            id: 1,
-            username: 'anson',
-            email: 'anson@gmail.com'
-        },
-        {
-            id: 2,
-            username: 'james',
-            email: 'james@gmail.com'
-        },
-        {
-            id: 3,
-            username: 'john',
-            email: 'john@gmail.com'
-        }
-    ])
+    // useEffect(()=>{
+    //      fetch(`https://jsonplaceholder.typicode.com/users`,  {
+    //         method: 'GET',
+    //     }).then((response)=>{
+    //         return response.json()
+            
+    //     }).then((data)=>{
+    //         console.log(data)
+    //     })
+    //     .catch((error)=>{
+    //         console.error("Error fetching users: ", error);
+    //     })
+    // })
+      
+    useEffect(() => {
+        const controller = new AbortController();
 
-    return <div>
-        <div>
-        <form onSubmit={(e)=>{
-            e.preventDefault();
-            const newUser = {
-                id: counter,
-                username,
-                email
+        async function fetUsers() {
+            try {
+                const response = await fetch('https://jsonplaceholder.typicode.com/users',{
+                    signal: controller.signal
+                });
+                const json = await response.json();
+                console.log("Fetched users:", json);  
+            } catch (error) {
+                console.error("Error fetching users:", error);
             }
-            setCounter((currentCounter)=> currentCounter + 1);
-            setUsers((currentUserState)=> [...currentUserState, newUser])
-        }}>
-            <div>
-                <label htmlFor="username">Username: </label>
-                <input  value={username} onChange={(e)=> setUsername(e.target.value)} id="username" type="text" />
-                <br />
-            </div>
-            <div>
-                <label htmlFor="email">Email: </label>
-                <input id="email" value={email} onChange={(e)=> setEmail(e.target.value)} type="text" />
-            </div>
-            <button>Add users</button>
-        </form>
-        </div>
-        <br />
-        {users.map((users) => (
-            <UserDetail key={users.id} users={users} setUsers={setUsers} />
-        ))}
+        }
+        
+        fetUsers() ; 
+        return ()=>{
+            controller.abort();
+        }
+    }, []);  
+    
+    return <div>
+        <div>You clicked the button {counter} times </div>
+        <button onClick={()=>setCounter((count)=> count +1)}>Click Me</button>
+        <button onClick={()=>setSync((current)=>!current)}>Sync</button>
     </div>
 }
