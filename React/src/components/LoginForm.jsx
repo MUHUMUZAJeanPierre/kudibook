@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 export function LoginForm(){
     const handleSubmit = (e)=>{
         e.preventDefault();
@@ -15,6 +17,29 @@ export function LoginForm(){
 
 
     }
+
+
+    useEffect(() => {
+        const resizeEventHandler = () => {
+            console.log("window/viewport resized");
+        };
+        const handleDocumentClick = ()=>{
+            console.log('click on document');
+            
+        }
+
+        window.addEventListener("resize", resizeEventHandler);
+        window.addEventListener("click", handleDocumentClick);
+
+        return () => {
+            console.log("unmounting loginForm");
+            console.log("removing resize event lister");
+            window.removeEventListener("remove", resizeEventHandler);
+            window.removeEventListener("click", handleDocumentClick);
+            
+        window.removeEventListener("resize", resizeEventHandler);
+        };
+    }, [398]);
     return <form onSubmit={handleSubmit}>
         <label htmlFor="username" >Username: </label><br />
         <input 
