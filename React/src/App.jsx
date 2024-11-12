@@ -1,56 +1,26 @@
-import { useState } from "react";
-import { UserDetail } from "./components/UserDetail";
+import { useEffect, useState } from "react"
 
-export default function App() {
-    const [username, setUsername] =useState("");
-    const [email, setEmail] =useState("");
-    const [counter, setCounter] = useState(4)
+export default function App(){
+    const [counter, setCounter] = useState(0);
+    useEffect(()=>{
+        console.log("rendering...");
+        document.title = "React tutorial" + counter;
+    })
+    // useEffect(() => {
+        // This code runs every time the component re-renders
+    //   });
+      
+    // useEffect(() => {
+        // This code runs only once after the initial render
+    //   }, []);
 
-    const [users, setUsers] = useState([
-        {
-            id: 1,
-            username: 'anson',
-            email: 'anson@gmail.com'
-        },
-        {
-            id: 2,
-            username: 'james',
-            email: 'james@gmail.com'
-        },
-        {
-            id: 3,
-            username: 'john',
-            email: 'john@gmail.com'
-        }
-    ])
-
+    // useEffect(() => {
+    //     // This code runs only when dep1 or dep2 change
+    //   }, [dep1, dep2]);
+      
+      
     return <div>
-        <div>
-        <form onSubmit={(e)=>{
-            e.preventDefault();
-            const newUser = {
-                id: counter,
-                username,
-                email
-            }
-            setCounter((currentCounter)=> currentCounter + 1);
-            setUsers((currentUserState)=> [...currentUserState, newUser])
-        }}>
-            <div>
-                <label htmlFor="username">Username: </label>
-                <input  value={username} onChange={(e)=> setUsername(e.target.value)} id="username" type="text" />
-                <br />
-            </div>
-            <div>
-                <label htmlFor="email">Email: </label>
-                <input id="email" value={email} onChange={(e)=> setEmail(e.target.value)} type="text" />
-            </div>
-            <button>Add users</button>
-        </form>
-        </div>
-        <br />
-        {users.map((users) => (
-            <UserDetail key={users.id} users={users} setUsers={setUsers} />
-        ))}
+        <div>You clicked the button {counter} times </div>
+        <button onClick={()=>setCounter((count)=> count +1)}>Click Me</button>
     </div>
 }
