@@ -24,6 +24,6 @@ export default function App(){
     return <div>
         <div>You clicked the button {counter} times </div>
         <button onClick={()=>setCounter((count)=> count +1)}>Click Me</button>
-        <button onClick={()=>setSync((current)=> !current)}>Sync</button>
+        <button onClick={()=>setSync((current)=>!current)}>Sync</button>
     </div>
 }
