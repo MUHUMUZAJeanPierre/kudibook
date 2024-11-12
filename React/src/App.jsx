@@ -1,56 +1,69 @@
+// src/App.jsx
 import { useState } from "react";
-import { UserDetail } from "./components/UserDetail";
 
+// This line ensures that `App` is exported as a default component
 export default function App() {
-    const [username, setUsername] =useState("");
-    const [email, setEmail] =useState("");
-    const [counter, setCounter] = useState(4)
+    const [blogPostData, setBlogPostData] = useState({
+        title: "",
+        body: "",
+    });
 
-    const [users, setUsers] = useState([
-        {
-            id: 1,
-            username: 'anson',
-            email: 'anson@gmail.com'
-        },
-        {
-            id: 2,
-            username: 'james',
-            email: 'james@gmail.com'
-        },
-        {
-            id: 3,
-            username: 'john',
-            email: 'john@gmail.com'
-        }
-    ])
-
-    return <div>
+    return (
         <div>
-        <form onSubmit={(e)=>{
-            e.preventDefault();
-            const newUser = {
-                id: counter,
-                username,
-                email
-            }
-            setCounter((currentCounter)=> currentCounter + 1);
-            setUsers((currentUserState)=> [...currentUserState, newUser])
-        }}>
-            <div>
-                <label htmlFor="username">Username: </label>
-                <input  value={username} onChange={(e)=> setUsername(e.target.value)} id="username" type="text" />
-                <br />
-            </div>
-            <div>
-                <label htmlFor="email">Email: </label>
-                <input id="email" value={email} onChange={(e)=> setEmail(e.target.value)} type="text" />
-            </div>
-            <button>Add users</button>
-        </form>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    if (blogPostData.title && blogPostData.body) {
+                        fetch(`https://jsonplaceholder.typicode.com/posts`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                userId: 1,
+                                title: blogPostData.title,
+                                body: blogPostData.body,
+                            }),
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log("Post created:", data);
+                        })
+                        .catch((error) => {
+                            console.error("Error creating post:", error);
+                        });
+                    }
+                }}
+            >
+                <div>
+                    <label htmlFor="title">Title</label>
+                    <input
+                        type="text"
+                        name="title"
+                        value={blogPostData.title}
+                        onChange={(e) =>
+                            setBlogPostData((currentState) => ({
+                                ...currentState,
+                                title: e.target.value,
+                            }))
+                        }
+                    />
+                </div>
+                <div>
+                    <label htmlFor="body">Body</label>
+                    <textarea
+                        name="body"
+                        value={blogPostData.body}
+                        onChange={(e) =>
+                            setBlogPostData((currentState) => ({
+                                ...currentState,
+                                body: e.target.value,
+                            }))
+                        }
+                    />
+                </div>
+                <button type="submit">Create post</button>
+            </form>
         </div>
-        <br />
-        {users.map((users) => (
-            <UserDetail key={users.id} users={users} setUsers={setUsers} />
-        ))}
-    </div>
+    );
 }
