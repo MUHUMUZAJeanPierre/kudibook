@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useDocumentClick } from "../utils/hooks/useDocumentClick";
 
 export function LoginForm(){
     const handleSubmit = (e)=>{
@@ -23,23 +24,22 @@ export function LoginForm(){
         const resizeEventHandler = () => {
             console.log("window/viewport resized");
         };
-        const handleDocumentClick = ()=>{
-            console.log('click on document');
-            
-        }
 
         window.addEventListener("resize", resizeEventHandler);
-        window.addEventListener("click", handleDocumentClick);
 
         return () => {
             console.log("unmounting loginForm");
             console.log("removing resize event lister");
             window.removeEventListener("remove", resizeEventHandler);
-            window.removeEventListener("click", handleDocumentClick);
             
-        window.removeEventListener("resize", resizeEventHandler);
         };
-    }, [398]);
+
+
+    }, []);
+
+    useDocumentClick()
+
+
     return <form onSubmit={handleSubmit}>
         <label htmlFor="username" >Username: </label><br />
         <input 
